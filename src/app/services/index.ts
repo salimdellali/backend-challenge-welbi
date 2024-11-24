@@ -1,6 +1,11 @@
 import { ResidentRepository } from "../database/repositories/resident.repository"
 import { ProgramRepository } from "../database/repositories/program.repository"
-import { explodeStringOnCommas, countSimilarValues } from "../shared/utils"
+import {
+  explodeStringOnCommas,
+  countSimilarValues,
+  buildErrorResultDTO,
+  buildSuccessResultDTO,
+} from "../shared/utils"
 
 export class ResidentService {
   static recommendInterestingProgramsForResidentByResidentName(
@@ -8,44 +13,36 @@ export class ResidentService {
   ) {
     const resident = ResidentRepository.getFirstResidentByName(residentName)
     if (!resident) {
-      return {
-        data: null,
-        error: {
-          message: "Resident not found",
-        },
-      }
+      return buildErrorResultDTO(
+        `Resident with name "${residentName}" not found`,
+        404
+      )
     }
 
     // resident found
     if (!resident.hobbies) {
-      return {
-        data: null,
-        error: {
-          message: "Resident has no hobbies defined, cannot recommend programs",
-        },
-      }
+      return buildErrorResultDTO(
+        "Resident has no hobbies defined, cannot recommend programs",
+        404
+      )
     }
 
     // resident might have hobbies
     const residentHobbiesArray = explodeStringOnCommas(resident.hobbies)
     if (!residentHobbiesArray.length) {
-      return {
-        data: null,
-        error: {
-          message: "Resident has empty hobbies, cannot recommend programs",
-        },
-      }
+      return buildErrorResultDTO(
+        "Resident has empty hobbies, cannot recommend programs",
+        404
+      )
     }
 
     // resident has at least one hobby
     const allPrograms = ProgramRepository.getAllPrograms()
     if (!allPrograms.length) {
-      return {
-        data: null,
-        error: {
-          message: "No programs found",
-        },
-      }
+      return buildErrorResultDTO(
+        "No programs found, cannot recommend programs",
+        404
+      )
     }
 
     // programs found
@@ -55,12 +52,10 @@ export class ResidentService {
         explodeStringOnCommas(resident.hobbies)
       )
     if (!programsWithResidentHobbies.length) {
-      return {
-        data: null,
-        error: {
-          message: "No programs found with resident hobbies",
-        },
-      }
+      return buildErrorResultDTO(
+        "No programs found with resident hobbies, cannot recommend programs",
+        404
+      )
     }
     // programs with resident hobbies found
 
@@ -103,11 +98,6 @@ export class ResidentService {
     // @TODO: refine more the recommendation by randomizing
     // programs with same similarity scores
 
-    return {
-      data: {
-        recommendedProgramNamesForResident,
-      },
-      error: null,
-    }
+    return buildSuccessResultDTO(recommendedProgramNamesForResident)
   }
 }
