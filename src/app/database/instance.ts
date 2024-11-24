@@ -30,6 +30,7 @@ class Database {
       const datasetContentAsJSON = readFileSync(datasetPath, "utf-8")
       return JSON.parse(datasetContentAsJSON)
     } catch (error) {
+      // @TODO: handle file not found error
       const errorMessage = "Error reading dataset"
       console.error(errorMessage, error)
       throw new Error(errorMessage)

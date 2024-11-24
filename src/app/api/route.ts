@@ -1,8 +1,16 @@
-"use server"
-
 import { NextResponse } from "next/server"
-import { ResidentsService } from "../database/services/resident.service"
+import { ResidentService } from "../services"
 
 export async function GET() {
-  return NextResponse.json({ residents: ResidentsService.getAllResidents() })
+  // @TODO: escape and verify input is a valid name
+  const { data, error } =
+    ResidentService.recommendInterestingProgramsForResidentByResidentName(
+      "Randal Rau"
+      // "Darla Blanda"
+    )
+
+  return NextResponse.json({
+    data,
+    error,
+  })
 }
