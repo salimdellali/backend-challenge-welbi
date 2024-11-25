@@ -1,5 +1,7 @@
-import { NextRequest, NextResponse } from "next/server"
-import { ResidentService } from "./../../../services"
+// 1. Something that Darla Blanda would like feature
+
+import { NextRequest } from "next/server"
+import { recommendInterestingProgramNamesForResidentByResidentName } from "../../../services/program-service"
 import {
   buildNextSuccessResponse,
   buildNextErrorResponseDTO,
@@ -16,9 +18,7 @@ export async function GET(request: NextRequest) {
   }
 
   const { data, error } =
-    ResidentService.recommendInterestingProgramsForResidentByResidentName(
-      residentName
-    )
+    recommendInterestingProgramNamesForResidentByResidentName(residentName)
 
   if (error) {
     return buildNextErrorResponseDTO(error.message, error.httpStatusCode)

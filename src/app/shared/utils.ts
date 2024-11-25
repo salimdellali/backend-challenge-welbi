@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server"
+import { Program } from "../database/models/Program"
 
 export function explodeStringOnCommas(str: string | null): string[] {
   if (!str || str === null) return []
@@ -22,6 +23,26 @@ export function countSimilarValues(
   }, 0)
 
   return count
+}
+
+export function getUniqueProgramsByProgramName(programs: Program[]) {
+  const seen = new Set()
+  const uniqueProgramsByProgramName = programs.filter((program) => {
+    if (seen.has(program.name)) {
+      return false // skip duplicates
+    }
+    seen.add(program.name) // mark `name` as seen
+    return true // keep the first occurrence
+  })
+  return uniqueProgramsByProgramName
+}
+
+export function getUpToFirst3ProgramNames(programs: Program[]) {
+  const upToFirst3Programs =
+    programs.length > 3 ? programs.slice(0, 3) : programs
+
+  // return program names
+  return upToFirst3Programs.map((program) => program.name)
 }
 
 // @TODO: find a better place to store these functions
