@@ -25,7 +25,7 @@ export function countSimilarValues(
   return count
 }
 
-export function getUniqueProgramsByProgramName(programs: Program[]) {
+export function filterDuplicateProgramsByProgramName(programs: Program[]) {
   const seen = new Set()
   const uniqueProgramsByProgramName = programs.filter((program) => {
     if (seen.has(program.name)) {
@@ -38,14 +38,24 @@ export function getUniqueProgramsByProgramName(programs: Program[]) {
 }
 
 export function getUpToFirst3ProgramNames(programs: Program[]) {
-  const upToFirst3Programs =
-    programs.length > 3 ? programs.slice(0, 3) : programs
+  const upToFirst3Programs = programs.slice(0, 3)
 
   // return program names
   return upToFirst3Programs.map((program) => program.name)
 }
 
-// @TODO: find a better place to store these functions
+export function setOrIncrementMapValueByKey(
+  map: Map<string, number>,
+  key: string
+) {
+  if (map.has(key)) {
+    map.set(key, map.get(key)! + 1)
+  } else {
+    map.set(key, 1)
+  }
+}
+
+// @TODO: find a better place to store these functions and types
 export function buildSuccessResultDTO<T>(data: T) {
   return {
     data,
@@ -62,6 +72,10 @@ export function buildErrorResultDTO(message: string, httpStatusCode: number) {
     },
   }
 }
+
+export type BuildResultDTOReturnType =
+  | ReturnType<typeof buildSuccessResultDTO>
+  | ReturnType<typeof buildErrorResultDTO>
 
 export function buildNextSuccessResponse<T>(data: T) {
   return NextResponse.json(buildSuccessResultDTO(data), { status: 200 })

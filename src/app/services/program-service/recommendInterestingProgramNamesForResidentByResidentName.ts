@@ -6,12 +6,13 @@ import {
   buildErrorResultDTO,
   buildSuccessResultDTO,
   getUpToFirst3ProgramNames,
-  getUniqueProgramsByProgramName,
+  filterDuplicateProgramsByProgramName,
+  BuildResultDTOReturnType,
 } from "../../shared/utils"
 
 export function recommendInterestingProgramNamesForResidentByResidentName(
   residentName: string
-) {
+): BuildResultDTOReturnType {
   const resident = ResidentRepository.getFirstResidentByName(residentName)
   if (!resident) {
     return buildErrorResultDTO(
@@ -36,6 +37,9 @@ export function recommendInterestingProgramNamesForResidentByResidentName(
       404
     )
   }
+
+  // @TODO: maybe return 3 random programs here if no hobbies found, who knows what the resident might like
+  // return 3 random programs that at least match the same level of care of the resident
 
   // resident has at least one hobby
   const allPrograms = ProgramRepository.getAllPrograms()
@@ -75,9 +79,10 @@ export function recommendInterestingProgramNamesForResidentByResidentName(
     })
 
   // filter duplicate programs by name
-  const uniqueResidentMostInterestingPrograms = getUniqueProgramsByProgramName(
-    orderedProgramsByMostSimilarResidentHobbies
-  )
+  const uniqueResidentMostInterestingPrograms =
+    filterDuplicateProgramsByProgramName(
+      orderedProgramsByMostSimilarResidentHobbies
+    )
 
   const recommendedProgramNamesForResident = getUpToFirst3ProgramNames(
     uniqueResidentMostInterestingPrograms

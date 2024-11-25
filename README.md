@@ -1,4 +1,4 @@
-## steps I tool to solve the challenge
+## steps I took to solve the challenge
 
 1. read the email and understand clearly what needs to be done
 1. read the welbi.org website
@@ -12,3 +12,4 @@
 1. implement feature "Something that Darla Blanda would like"
 1. define DTOs and Next responses shapes
 1. implement feature "Engages the highest number of residents"
+1. implement feature "Addresses a gap in offerings"

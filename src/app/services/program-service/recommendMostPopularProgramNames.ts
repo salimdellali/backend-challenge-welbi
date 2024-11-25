@@ -2,11 +2,12 @@ import { ProgramRepository } from "../../database/repositories/program.repositor
 import {
   buildErrorResultDTO,
   buildSuccessResultDTO,
-  getUniqueProgramsByProgramName,
+  BuildResultDTOReturnType,
+  filterDuplicateProgramsByProgramName,
   getUpToFirst3ProgramNames,
 } from "../../shared/utils"
 
-export function recommendMostPopularProgramNames() {
+export function recommendMostPopularProgramNames(): BuildResultDTOReturnType {
   const allPrograms = ProgramRepository.getAllPrograms()
   if (!allPrograms.length) {
     return buildErrorResultDTO(
@@ -23,9 +24,8 @@ export function recommendMostPopularProgramNames() {
   })
 
   // filter duplicate programs by name
-  const uniqueSortedProgramsByProgramName = getUniqueProgramsByProgramName(
-    sortedProgramsByNbAttendees
-  )
+  const uniqueSortedProgramsByProgramName =
+    filterDuplicateProgramsByProgramName(sortedProgramsByNbAttendees)
 
   const recommendedMostPopularProgramNames = getUpToFirst3ProgramNames(
     uniqueSortedProgramsByProgramName
