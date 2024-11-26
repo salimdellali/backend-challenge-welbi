@@ -10,7 +10,7 @@ export function explodeStringOnCommas(str: string | null): string[] {
 export function countSimilarValues(
   firstArray: string[],
   secondArray: string[]
-) {
+): number {
   // Use a Set for fast lookup
   const firstArraySet = new Set(firstArray)
 
@@ -25,19 +25,7 @@ export function countSimilarValues(
   return count
 }
 
-export function filterDuplicateProgramsByProgramName(programs: Program[]) {
-  const seen = new Set()
-  const uniqueProgramsByProgramName = programs.filter((program) => {
-    if (seen.has(program.name)) {
-      return false // skip duplicates
-    }
-    seen.add(program.name) // mark `name` as seen
-    return true // keep the first occurrence
-  })
-  return uniqueProgramsByProgramName
-}
-
-export function getUpToFirst3ProgramNames(programs: Program[]) {
+export function getUpToFirst3ProgramNames(programs: Program[]): string[] {
   const upToFirst3Programs = programs.slice(0, 3)
 
   // return program names
@@ -47,7 +35,7 @@ export function getUpToFirst3ProgramNames(programs: Program[]) {
 export function setOrIncrementMapValueByKey(
   map: Map<string, number>,
   key: string
-) {
+): void {
   if (map.has(key)) {
     map.set(key, map.get(key)! + 1)
   } else {
@@ -56,14 +44,31 @@ export function setOrIncrementMapValueByKey(
 }
 
 // @TODO: find a better place to store these functions and types
-export function buildSuccessResultDTO<T>(data: T) {
+
+type SuccessResult<T> = {
+  data: T
+  error: null
+}
+
+type ErrorResult = {
+  data: null
+  error: {
+    message: string
+    httpStatusCode: number
+  }
+}
+
+export function buildSuccessResultDTO<T>(data: T): SuccessResult<T> {
   return {
     data,
     error: null,
   }
 }
 
-export function buildErrorResultDTO(message: string, httpStatusCode: number) {
+export function buildErrorResultDTO(
+  message: string,
+  httpStatusCode: number
+): ErrorResult {
   return {
     data: null,
     error: {
@@ -73,9 +78,7 @@ export function buildErrorResultDTO(message: string, httpStatusCode: number) {
   }
 }
 
-export type BuildResultDTOReturnType =
-  | ReturnType<typeof buildSuccessResultDTO>
-  | ReturnType<typeof buildErrorResultDTO>
+export type Result<T> = SuccessResult<T> | ErrorResult
 
 export function buildNextSuccessResponse<T>(data: T) {
   return NextResponse.json(buildSuccessResultDTO(data), { status: 200 })

@@ -6,13 +6,12 @@ import {
   buildErrorResultDTO,
   buildSuccessResultDTO,
   getUpToFirst3ProgramNames,
-  filterDuplicateProgramsByProgramName,
-  BuildResultDTOReturnType,
+  Result,
 } from "../../shared/utils"
 
 export function recommendInterestingProgramNamesForResidentByResidentName(
   residentName: string
-): BuildResultDTOReturnType {
+): Result<string[]> {
   const resident = ResidentRepository.getFirstResidentByName(residentName)
   if (!resident) {
     return buildErrorResultDTO(
@@ -80,7 +79,7 @@ export function recommendInterestingProgramNamesForResidentByResidentName(
 
   // filter duplicate programs by name
   const uniqueResidentMostInterestingPrograms =
-    filterDuplicateProgramsByProgramName(
+    ProgramRepository.filterDuplicateProgramsByProgramName(
       orderedProgramsByMostSimilarResidentHobbies
     )
 

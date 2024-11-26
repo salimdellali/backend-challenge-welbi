@@ -1,13 +1,15 @@
 import { ProgramRepository } from "../../database/repositories/program.repository"
 import { ResidentRepository } from "../../database/repositories/resident.repository"
 import {
-  BuildResultDTOReturnType,
+  Result,
   explodeStringOnCommas,
   setOrIncrementMapValueByKey,
 } from "../../shared/utils"
 import { buildErrorResultDTO, buildSuccessResultDTO } from "../../shared/utils"
 
-export function recommendProgramNamesAddressingGapInOfferings(): BuildResultDTOReturnType {
+export function recommendProgramNamesAddressingGapInOfferings(): Result<
+  string[]
+> {
   const allResidents = ResidentRepository.getAllResidents()
   if (!allResidents.length) {
     return buildErrorResultDTO(

@@ -77,4 +77,16 @@ export class ProgramRepository {
       )
     })
   }
+
+  static filterDuplicateProgramsByProgramName(programs: Program[]): Program[] {
+    const seen = new Set()
+    const uniqueProgramsByProgramName = programs.filter((program) => {
+      if (seen.has(program.name)) {
+        return false // skip duplicates
+      }
+      seen.add(program.name) // mark `name` as seen
+      return true // keep the first occurrence
+    })
+    return uniqueProgramsByProgramName
+  }
 }
