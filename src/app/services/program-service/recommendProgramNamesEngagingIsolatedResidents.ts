@@ -49,27 +49,20 @@ export function recommendProgramNamesEngagingIsolatedResidents(): Result<
 
   // for each resident, find program names that they have attended after exceeding ISOLATION_PERIOD_IN_DAYS period
   const programNamesAttendedByIsolatedResidents: string[] = []
-  for (const [
-    userId,
-    programsAttended,
-  ] of residentProgramNamesAttendanceWithDateMap) {
+  for (const programsAttended of residentProgramNamesAttendanceWithDateMap.values()) {
     for (let i = 0; i < programsAttended.length - 1; i++) {
       const {
         programName: previousProgramName,
-        attendanceDateTimeUTC: previousAttendanceDateTimeUTC,
+        attendanceDateTimeUTC: prevDate,
       } = programsAttended[i]
 
-      const {
-        programName: nextProgramName,
-        attendanceDateTimeUTC: nextAttendanceDateTimeUTC,
-      } = programsAttended[i + 1]
+      const { programName: nextProgramName, attendanceDateTimeUTC: nextDate } =
+        programsAttended[i + 1]
 
       // check if the gap between the 2 dates is greater or equal to ISOLATION_PERIOD_IN_DAYS
       if (
-        countDaysBetweenISODateTimesUTC(
-          previousAttendanceDateTimeUTC,
-          nextAttendanceDateTimeUTC
-        ) >= ISOLATION_PERIOD_IN_DAYS
+        countDaysBetweenISODateTimesUTC(prevDate, nextDate) >=
+        ISOLATION_PERIOD_IN_DAYS
       ) {
         // nextProgramName is a program that an isolated resident have attended, add it to the list
         programNamesAttendedByIsolatedResidents.push(nextProgramName)
@@ -79,21 +72,13 @@ export function recommendProgramNamesEngagingIsolatedResidents(): Result<
   // we have a list of program names that have been attended by isolated residents
 
   // count how many times a program has occurred
-  const programNamesOccurrencesAttendedByIsolatedResidentsMap = new Map<
-    string,
-    number
-  >()
+  const programNamesOccurrencesMap = new Map<string, number>()
   for (const programName of programNamesAttendedByIsolatedResidents) {
-    setOrIncrementMapValueByKey(
-      programNamesOccurrencesAttendedByIsolatedResidentsMap,
-      programName
-    )
+    setOrIncrementMapValueByKey(programNamesOccurrencesMap, programName)
   }
 
   // sort programs names by most occurred,
-  const sortedProgramNamesByMostOccurredForEngagingIsolatedResidents = [
-    ...programNamesOccurrencesAttendedByIsolatedResidentsMap,
-  ].sort(
+  const sortedProgramNamesByMostOccurred = [...programNamesOccurrencesMap].sort(
     (
       [programNameA, programOccurrenceA],
       [programNameB, programOccurrenceB]
@@ -103,12 +88,9 @@ export function recommendProgramNamesEngagingIsolatedResidents(): Result<
   )
 
   // get up to 3 most popular program names engaging isolated residents
-  const recommendedMostPopularProgramNamesEngagingIsolatedResidents =
-    sortedProgramNamesByMostOccurredForEngagingIsolatedResidents
-      .slice(0, 3)
-      .map(([programName]) => programName)
+  const topProgramNames = sortedProgramNamesByMostOccurred
+    .slice(0, 3)
+    .map(([programName]) => programName)
 
-  return buildSuccessResultDTO(
-    recommendedMostPopularProgramNamesEngagingIsolatedResidents
-  )
+  return buildSuccessResultDTO(topProgramNames)
 }
