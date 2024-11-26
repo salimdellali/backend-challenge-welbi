@@ -43,8 +43,21 @@ export function setOrIncrementMapValueByKey(
   }
 }
 
-// @TODO: find a better place to store these functions and types
+export function extractDateStringFromISODateTimeUTC(
+  isoDateTime: string
+): string {
+  // Create a Date object from the ISO 8601 string
+  const date = new Date(isoDateTime)
 
+  // Extract the date portion in YYYY-MM-DD format
+  const year = date.getUTCFullYear()
+  const month = String(date.getUTCMonth() + 1).padStart(2, "0") // Months are 0-based
+  const day = String(date.getUTCDate()).padStart(2, "0")
+
+  return `${year}-${month}-${day}`
+}
+
+// @TODO: find a better place to store these functions and types
 type SuccessResult<T> = {
   data: T
   error: null

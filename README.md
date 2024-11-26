@@ -9,7 +9,8 @@
 1. create the Resident and Program types
 1. create a simple endpoint to test if things are working correctly
 1. setup dataset locally and ensure data fetching is working
-1. implement feature "Something that Darla Blanda would like"
+1. implement feature 1 "Something that Darla Blanda would like"
 1. define DTOs and Next responses shapes
-1. implement feature "Engages the highest number of residents"
-1. implement feature "Addresses a gap in offerings"
+1. implement feature 3 "Engages the highest number of residents"
+1. implement feature 4 "Addresses a gap in offerings"
+1. implement feature 5 "Addresses a gap in time"

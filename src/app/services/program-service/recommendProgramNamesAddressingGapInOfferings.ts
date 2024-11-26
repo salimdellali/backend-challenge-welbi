@@ -48,8 +48,9 @@ export function recommendProgramNamesAddressingGapInOfferings(): Result<
     })
   })
 
-  // get up to 3 most popular hobbies
-  const upTo3MostPopularHobbyNames: string[] = Array.from(
+  // Take up to the first 5 most popular hobby names
+  // @TODO: make the number of picked hobby names configurable
+  const mostPopularHobbyNames: string[] = Array.from(
     residentHobbyNamesCountMap.entries()
   )
     .filter(([hobbyName]) => hobbyName !== "noHobbies")
@@ -57,14 +58,14 @@ export function recommendProgramNamesAddressingGapInOfferings(): Result<
       ([hobbyNameA, hobbyCountA], [hobbyNameB, hobbyCountB]) =>
         hobbyCountB - hobbyCountA // sort by most popular hobby
     )
-    .slice(0, 5) // Take up to the first 5 most popular hobbies // @TODO: make the number of picked hobbies configurable
+    .slice(0, 5)
     .map(([hobbyName]) => hobbyName)
 
   // get programs that match one or more of the most popular hobbies
   const programsWithMostPopularHobbies =
     ProgramRepository.filterProgramsByHobbies(
       allPrograms,
-      upTo3MostPopularHobbyNames
+      mostPopularHobbyNames
     )
 
   // count how many times each program has occurred by program name
@@ -81,15 +82,15 @@ export function recommendProgramNamesAddressingGapInOfferings(): Result<
     Array.from(programNamesWithMostPopularHobbiesCountMap.entries())
       .sort(
         ([programNameA, programCountA], [programNameB, programCountB]) =>
-          programCountA - programCountB
+          programCountA - programCountB // sort by least occurred program with most popular hobbies
       )
-      .map(([programName]) => programName)
+      .map(([programName, programCount]) => programName)
 
   // recommend 3 least occurred programs
-  const recommendedLeastOccuredProgramsWithMostResidentsInterests: string[] =
+  const recommendedLeastOccurredProgramsWithMostResidentsInterests: string[] =
     sortedLeastOccurredProgramNamesWithMostPopularHobbies.slice(0, 3)
 
   return buildSuccessResultDTO(
-    recommendedLeastOccuredProgramsWithMostResidentsInterests
+    recommendedLeastOccurredProgramsWithMostResidentsInterests
   )
 }
