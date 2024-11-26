@@ -1,3 +1,4 @@
+import { Program } from "../../database/models/Program"
 import { ProgramRepository } from "../../database/repositories/program.repository"
 import {
   buildErrorResultDTO,
@@ -7,7 +8,7 @@ import {
 } from "../../shared/utils"
 
 export function recommendMostPopularProgramNames(): Result<string[]> {
-  const allPrograms = ProgramRepository.getAllPrograms()
+  const allPrograms: Program[] = ProgramRepository.getAllPrograms()
   if (!allPrograms.length) {
     return buildErrorResultDTO(
       "No programs found, cannot get most popular programs",
@@ -18,19 +19,16 @@ export function recommendMostPopularProgramNames(): Result<string[]> {
 
   // sort programs by number of attendees
   // programs will be sorted from most to least popular
-  const sortedProgramsByNbAttendees = allPrograms.sort((a, b) => {
+  const sortedProgramsByNbAttendees: Program[] = allPrograms.sort((a, b) => {
     return b.attendees.length - a.attendees.length
   })
 
   // filter duplicate programs by name
-  const uniqueSortedProgramsByProgramName =
+  const uniquePrograms: Program[] =
     ProgramRepository.filterDuplicateProgramsByProgramName(
       sortedProgramsByNbAttendees
     )
+  const topProgramNames: string[] = getUpToFirst3ProgramNames(uniquePrograms)
 
-  const recommendedMostPopularProgramNames = getUpToFirst3ProgramNames(
-    uniqueSortedProgramsByProgramName
-  )
-
-  return buildSuccessResultDTO(recommendedMostPopularProgramNames)
+  return buildSuccessResultDTO(topProgramNames)
 }
