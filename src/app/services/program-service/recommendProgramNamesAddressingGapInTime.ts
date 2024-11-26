@@ -18,50 +18,52 @@ export function recommendProgramNamesAddressingGapInTime(): Result<string[]> {
   // programs found
 
   // group programs by date
-  const groupedProgramsByStartDateMap = new Map<string, Program[]>()
+  const groupedProgramNamesByStartDateMap = new Map<string, string[]>()
   for (const program of allPrograms) {
     const programStartDate = extractDateStringFromISODateTimeUTC(program.start)
 
-    if (!groupedProgramsByStartDateMap.has(programStartDate)) {
-      groupedProgramsByStartDateMap.set(programStartDate, [])
+    if (!groupedProgramNamesByStartDateMap.has(programStartDate)) {
+      groupedProgramNamesByStartDateMap.set(programStartDate, [])
     }
-    groupedProgramsByStartDateMap.get(programStartDate)!.push(program)
+    groupedProgramNamesByStartDateMap.get(programStartDate)!.push(program.name)
   }
 
   // sort programs by least number of programs per date
   // programs will be sorted from lowest number of occurred programs per date to highest number of occurred programs per date
-  const sortedProgramsByNbProgramsPerDate: [string, Program[]][] = Array.from(
-    groupedProgramsByStartDateMap.entries()
-  ).sort(([dateA, programsA], [dateB, programsB]) => {
-    return programsA.length - programsB.length
-  })
+  const sortedProgramNamesByNbProgramsPerDate: [string, string[]][] =
+    Array.from(groupedProgramNamesByStartDateMap.entries()).sort(
+      ([dateA, programNamesA], [dateB, programsNamesB]) => {
+        return programNamesA.length - programsNamesB.length
+      }
+    )
 
   // Take programs of the 5 least packed dates
   // @TODO: make the number of least packed dates configurable
-  const programsOfLeastPackedDates: [string, Program[]][] =
-    sortedProgramsByNbProgramsPerDate.slice(0, 5)
+  const programNamesOfLeastPackedDates: [string, string[]][] =
+    sortedProgramNamesByNbProgramsPerDate.slice(0, 5)
 
   // count program occurrences on least packed dates
   const programNamesOccurrencesOfLeastPackedDatesMap = new Map<string, number>()
-  programsOfLeastPackedDates.forEach(([date, programs]) => {
-    programs.forEach((program) => {
+  programNamesOfLeastPackedDates.forEach(([date, programNames]) => {
+    programNames.forEach((programName) => {
+      // set or increment program name occurrence
       setOrIncrementMapValueByKey(
         programNamesOccurrencesOfLeastPackedDatesMap,
-        program.name
+        programName
       )
     })
   })
 
   // get up to 3 most popular program names on least packed dates
-  const recommendedProgramNamesOnLeastPackedDates = Array.from(
+  const recommendedProgramNamesOnLeastPackedDates: string[] = Array.from(
     programNamesOccurrencesOfLeastPackedDatesMap.entries()
   )
     .sort(
       (
-        [programNameA, programOccurrencesA],
-        [programNameB, programOccurrencesB]
+        [programNameA, programOccurrenceA],
+        [programNameB, programOccurrenceB]
       ) => {
-        return programOccurrencesB - programOccurrencesA // sort by highest number of occurrences
+        return programOccurrenceB - programOccurrenceA // sort by highest number of occurrences
       }
     )
     .slice(0, 3)

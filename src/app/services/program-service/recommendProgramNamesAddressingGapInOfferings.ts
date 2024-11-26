@@ -69,17 +69,18 @@ export function recommendProgramNamesAddressingGapInOfferings(): Result<
     )
 
   // count how many times each program has occurred by program name
-  const programNamesWithMostPopularHobbiesCountMap = new Map<string, number>()
+  const programNamesCountWithMostPopularHobbiesMap = new Map<string, number>()
   programsWithMostPopularHobbies.forEach((program) => {
+    // set or increment program name count
     setOrIncrementMapValueByKey(
-      programNamesWithMostPopularHobbiesCountMap,
+      programNamesCountWithMostPopularHobbiesMap,
       program.name
     )
   })
 
   // sort program names by least occurred program
   const sortedLeastOccurredProgramNamesWithMostPopularHobbies: string[] =
-    Array.from(programNamesWithMostPopularHobbiesCountMap.entries())
+    Array.from(programNamesCountWithMostPopularHobbiesMap.entries())
       .sort(
         ([programNameA, programCountA], [programNameB, programCountB]) =>
           programCountA - programCountB // sort by least occurred program with most popular hobbies
