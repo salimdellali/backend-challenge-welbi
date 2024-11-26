@@ -1,4 +1,3 @@
-import { Program } from "../../database/models/Program"
 import { ProgramRepository } from "../../database/repositories/program.repository"
 import {
   Result,

@@ -44,10 +44,10 @@ export function setOrIncrementMapValueByKey(
 }
 
 export function extractDateStringFromISODateTimeUTC(
-  isoDateTime: string
+  isoDateTimeUTC: string
 ): string {
   // Create a Date object from the ISO 8601 string
-  const date = new Date(isoDateTime)
+  const date = new Date(isoDateTimeUTC)
 
   // Extract the date portion in YYYY-MM-DD format
   const year = date.getUTCFullYear()
@@ -55,6 +55,24 @@ export function extractDateStringFromISODateTimeUTC(
   const day = String(date.getUTCDate()).padStart(2, "0")
 
   return `${year}-${month}-${day}`
+}
+
+export const countDaysBetweenISODateTimesUTC = (
+  isoDateTimeUTC1: string,
+  isoDateTimeUTC2: string
+): number => {
+  // Convert the ISO date-time strings into Date objects
+  const date1 = new Date(isoDateTimeUTC1)
+  const date2 = new Date(isoDateTimeUTC2)
+
+  // Calculate the difference in time (milliseconds)
+  const diffInMilliseconds = Math.abs(date2.getTime() - date1.getTime())
+
+  // Convert milliseconds to days (1 day = 24 * 60 * 60 * 1000 milliseconds)
+  const diffInDays = diffInMilliseconds / (1000 * 60 * 60 * 24)
+
+  // Return the number of days (rounded to the nearest integer)
+  return Math.round(diffInDays)
 }
 
 // @TODO: find a better place to store these functions and types

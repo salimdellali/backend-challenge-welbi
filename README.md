@@ -14,3 +14,4 @@
 1. implement feature 3 "Engages the highest number of residents"
 1. implement feature 4 "Addresses a gap in offerings"
 1. implement feature 5 "Addresses a gap in time"
+1. implement feature 2 "Engages multiple isolated residents"
