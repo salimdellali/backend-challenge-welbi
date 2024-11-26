@@ -8,14 +8,17 @@ import {
   getUpToFirst3ProgramNames,
   Result,
 } from "../../shared/utils"
+import { Resident } from "../../database/models/Resident"
+import { Program } from "../../database/models/Program"
 
 export function recommendInterestingProgramNamesForResidentByResidentName(
   residentName: string
 ): Result<string[]> {
-  const resident = ResidentRepository.getFirstResidentByName(residentName)
+  const resident: Resident | null =
+    ResidentRepository.getFirstResidentByName(residentName)
   if (!resident) {
     return buildErrorResultDTO(
-      `Resident with name "${residentName}" not found`,
+      `Resident not found with name: ${residentName}`,
       404
     )
   }
@@ -29,7 +32,7 @@ export function recommendInterestingProgramNamesForResidentByResidentName(
   }
 
   // resident might have hobbies
-  const residentHobbiesArray = explodeStringOnCommas(resident.hobbies)
+  const residentHobbiesArray: string[] = explodeStringOnCommas(resident.hobbies)
   if (!residentHobbiesArray.length) {
     return buildErrorResultDTO(
       "Resident has empty hobbies, cannot recommend programs",
@@ -41,19 +44,20 @@ export function recommendInterestingProgramNamesForResidentByResidentName(
   // return 3 random programs that at least match the same level of care of the resident
 
   // resident has at least one hobby
-  const allPrograms = ProgramRepository.getAllPrograms()
+  const allPrograms: Program[] = ProgramRepository.getAllPrograms()
   if (!allPrograms.length) {
     return buildErrorResultDTO(
       "No programs found, cannot recommend programs",
       404
     )
   }
-
   // programs found
-  const programsWithResidentHobbies = ProgramRepository.filterProgramsByHobbies(
-    allPrograms,
-    explodeStringOnCommas(resident.hobbies)
-  )
+
+  const programsWithResidentHobbies: Program[] =
+    ProgramRepository.filterProgramsByHobbies(
+      allPrograms,
+      explodeStringOnCommas(resident.hobbies)
+    )
   if (!programsWithResidentHobbies.length) {
     return buildErrorResultDTO(
       "No programs found with resident hobbies, cannot recommend programs",
@@ -64,30 +68,28 @@ export function recommendInterestingProgramNamesForResidentByResidentName(
 
   // order programs with hobbies that are most similar to resident hobbies
   // programs will be sorted from most similar to least similar
-  const orderedProgramsByMostSimilarResidentHobbies =
-    programsWithResidentHobbies.sort((a, b) => {
+  const sortedProgramsByMostSimilarResidentHobbies: Program[] =
+    programsWithResidentHobbies.sort((programA, programB) => {
       const aSimilarityScore = countSimilarValues(
-        explodeStringOnCommas(a.hobbies!),
+        explodeStringOnCommas(programA.hobbies!),
         residentHobbiesArray
       )
       const bSimilarityScore = countSimilarValues(
-        explodeStringOnCommas(b.hobbies!),
+        explodeStringOnCommas(programB.hobbies!),
         residentHobbiesArray
       )
       return bSimilarityScore - aSimilarityScore
     })
 
   // filter duplicate programs by name
-  const uniqueResidentMostInterestingPrograms =
+  const uniquePrograms: Program[] =
     ProgramRepository.filterDuplicateProgramsByProgramName(
-      orderedProgramsByMostSimilarResidentHobbies
+      sortedProgramsByMostSimilarResidentHobbies
     )
 
-  const recommendedProgramNamesForResident = getUpToFirst3ProgramNames(
-    uniqueResidentMostInterestingPrograms
-  )
+  const topProgramNames: string[] = getUpToFirst3ProgramNames(uniquePrograms)
 
   // @TODO: refine more the recommendation by randomizing
   // programs with same similarity scores
-  return buildSuccessResultDTO(recommendedProgramNamesForResident)
+  return buildSuccessResultDTO(topProgramNames)
 }
