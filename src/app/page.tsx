@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from "next/image"
 
 export default function Home() {
   return (
@@ -14,40 +14,148 @@ export default function Home() {
         />
         <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
           <li className="mb-2">
-            Get started by editing{" "}
             <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
+              GET{" "}
             </code>
-            .
+            Something that:
+            <ul className="list-disc list-inside mt-2 ml-6">
+              <li>
+                <a
+                  href="api/recommend/interesting-program-names?residentname=Darla Blanda"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 hover:underline hover:underline-offset-4"
+                >
+                  Darla Blanda would like
+                  <Image
+                    aria-hidden
+                    src="/open-in-new-tab.svg"
+                    alt="Open in new tab icon"
+                    width={16}
+                    height={16}
+                  />
+                </a>
+              </li>
+              <li>
+                <a
+                  href="api/recommend/interesting-program-names?residentname=randal rau"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 hover:underline hover:underline-offset-4"
+                >
+                  randal rau would like
+                  <Image
+                    aria-hidden
+                    src="/open-in-new-tab.svg"
+                    alt="Open in new tab icon"
+                    width={16}
+                    height={16}
+                  />
+                </a>
+              </li>
+              <li>
+                <a
+                  href="api/recommend/interesting-program-names?residentname=Gordon Freeman"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 hover:underline hover:underline-offset-4"
+                >
+                  Gordon Freeman would like (no such resident)
+                  <Image
+                    aria-hidden
+                    src="/open-in-new-tab.svg"
+                    alt="Open in new tab icon"
+                    width={16}
+                    height={16}
+                  />
+                </a>
+              </li>
+            </ul>
           </li>
-          <li>Save and see your changes instantly.</li>
+          <li>
+            <a
+              href="api/recommend/most-popular-program-names"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 hover:underline hover:underline-offset-4"
+            >
+              <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
+                GET{" "}
+              </code>
+              Engages the highest number of residents
+              <Image
+                aria-hidden
+                src="/open-in-new-tab.svg"
+                alt="Open in new tab icon"
+                width={16}
+                height={16}
+              />
+            </a>
+          </li>
+          <li>
+            <a
+              href="api/recommend/engages-isolated-residents-program-names"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 hover:underline hover:underline-offset-4"
+            >
+              <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
+                GET{" "}
+              </code>
+              Engages multiple isolated residents (those who have not been to a
+              program recently)
+              <Image
+                aria-hidden
+                src="/open-in-new-tab.svg"
+                alt="Open in new tab icon"
+                width={16}
+                height={16}
+              />
+            </a>
+          </li>
+          <li>
+            <a
+              href="api/recommend/address-offerings-gap-program-names"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 hover:underline hover:underline-offset-4"
+            >
+              <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
+                GET{" "}
+              </code>
+              Addresses a gap in offerings (lots of interest from residents, but
+              no similar programs planned)
+              <Image
+                aria-hidden
+                src="/open-in-new-tab.svg"
+                alt="Open in new tab icon"
+                width={16}
+                height={16}
+              />
+            </a>
+          </li>
+          <li>
+            <a
+              href="api/recommend/address-time-gap-program-names"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 hover:underline hover:underline-offset-4"
+            >
+              <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
+                GET{" "}
+              </code>
+              Addresses a gap in time (a reasonable day and time with few
+              programs offered)
+              <Image
+                aria-hidden
+                src="/open-in-new-tab.svg"
+                alt="Open in new tab icon"
+                width={16}
+                height={16}
+              />
+            </a>
+          </li>
         </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
       </main>
       <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
         <a
@@ -58,44 +166,31 @@ export default function Home() {
         >
           <Image
             aria-hidden
-            src="/file.svg"
+            src="/github.svg"
             alt="File icon"
             width={16}
             height={16}
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+          GitHub Repo of this project
           <Image
             aria-hidden
-            src="/window.svg"
+            src="/open-in-new-tab.svg"
+            alt="Open in new tab icon"
+            width={16}
+            height={16}
+          />
+        </a>
+        <div className="flex items-center gap-2">
+          <Image
+            aria-hidden
+            src="/code.svg"
             alt="Window icon"
             width={16}
             height={16}
           />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+          Powered by Salim Dellali
+        </div>
       </footer>
     </div>
-  );
+  )
 }
