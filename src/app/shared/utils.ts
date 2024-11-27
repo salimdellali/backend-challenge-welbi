@@ -43,6 +43,13 @@ export function setOrIncrementMapValueByKey(
   }
 }
 
+/**
+ *
+ * @param isoDateTimeUTC
+ * @example "2022-07-01T00:00:00.000Z"
+ * @returns Date in "YYYY-MM-DD"
+ * @example "2022-07-01"
+ */
 export function extractDateStringFromISODateTimeUTC(
   isoDateTimeUTC: string
 ): string {
@@ -54,7 +61,7 @@ export function extractDateStringFromISODateTimeUTC(
   const month = String(date.getUTCMonth() + 1).padStart(2, "0") // Months are 0-based
   const day = String(date.getUTCDate()).padStart(2, "0")
 
-  return `${year}-${month}-${day}`
+  return `${year}-${month}-${day}` // "YYYY-MM-DD"
 }
 
 export const countDaysBetweenISODateTimesUTC = (

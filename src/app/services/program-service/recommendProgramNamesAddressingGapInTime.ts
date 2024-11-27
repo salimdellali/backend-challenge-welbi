@@ -1,3 +1,4 @@
+import { Program } from "../../database/models/Program"
 import { ProgramRepository } from "../../database/repositories/program.repository"
 import {
   Result,
@@ -6,8 +7,11 @@ import {
 } from "../../shared/utils"
 import { buildErrorResultDTO, buildSuccessResultDTO } from "../../shared/utils"
 
+// @TODO: make the picked number of least packed dates configurable
+const NUMBER_OF_LEAST_PACKED_DAYS = 5
+
 export function recommendProgramNamesAddressingGapInTime(): Result<string[]> {
-  const allPrograms = ProgramRepository.getAllPrograms()
+  const allPrograms: Program[] = ProgramRepository.getAllPrograms()
   if (!allPrograms.length) {
     return buildErrorResultDTO(
       "No programs found, cannot recommend programs addressing gap in time",
@@ -17,46 +21,62 @@ export function recommendProgramNamesAddressingGapInTime(): Result<string[]> {
   // programs found
 
   // group programs by date
-  const groupedProgramNamesByStartDateMap = new Map<string, string[]>()
+  const groupedProgramNamesByStartDateMap = new Map<
+    string, // date
+    string[] // array of program names that happened on that date
+  >()
   for (const program of allPrograms) {
-    const programStartDate = extractDateStringFromISODateTimeUTC(program.start)
+    const programStartDate: string = extractDateStringFromISODateTimeUTC(
+      program.start
+    )
 
-    if (!groupedProgramNamesByStartDateMap.has(programStartDate)) {
-      groupedProgramNamesByStartDateMap.set(programStartDate, [])
-    }
-    groupedProgramNamesByStartDateMap.get(programStartDate)!.push(program.name)
+    // get or initialize program names per date
+    const programNames: string[] =
+      groupedProgramNamesByStartDateMap.get(programStartDate) ?? []
+
+    // insert new program name
+    programNames.push(program.name)
+
+    // update date entry
+    groupedProgramNamesByStartDateMap.set(programStartDate, programNames)
   }
 
   // sort programs by least number of programs per date
   // programs will be sorted from lowest number of occurred programs per date to highest number of occurred programs per date
-  const sortedProgramNamesByNbProgramsPerDate: [string, string[]][] =
-    Array.from(groupedProgramNamesByStartDateMap.entries()).sort(
-      ([dateA, programNamesA], [dateB, programsNamesB]) => {
-        return programNamesA.length - programsNamesB.length
-      }
-    )
+  const sortedProgramNamesByNbProgramsPerDate: [
+    string, // date
+    string[] // array of program names that happened on that date
+  ][] = [...groupedProgramNamesByStartDateMap].sort(
+    ([dateA, programNamesA], [dateB, programsNamesB]) => {
+      return programNamesA.length - programsNamesB.length // sort by lowest number of occurred programs per date
+    }
+  )
 
   // Take programs of the 5 least packed dates
-  // @TODO: make the number of least packed dates configurable
-  const programNamesOfLeastPackedDates: [string, string[]][] =
-    sortedProgramNamesByNbProgramsPerDate.slice(0, 5)
+  const programNamesOfLeastPackedDates: [
+    string, // date
+    string[] // array of program names that happened on that date
+  ][] = sortedProgramNamesByNbProgramsPerDate.slice(
+    0,
+    NUMBER_OF_LEAST_PACKED_DAYS
+  )
 
   // count program occurrences on least packed dates
   const programNamesOccurrencesOfLeastPackedDatesMap = new Map<string, number>()
-  programNamesOfLeastPackedDates.forEach(([date, programNames]) => {
-    programNames.forEach((programName) => {
+  for (const [date, programNames] of programNamesOfLeastPackedDates) {
+    for (const programName of programNames) {
       // set or increment program name occurrence
       setOrIncrementMapValueByKey(
         programNamesOccurrencesOfLeastPackedDatesMap,
         programName
       )
-    })
-  })
+    }
+  }
 
-  // get up to 3 most popular program names on least packed dates
-  const recommendedProgramNamesOnLeastPackedDates: string[] = Array.from(
-    programNamesOccurrencesOfLeastPackedDatesMap.entries()
-  )
+  // sort program names by highest number of occurrences
+  const sortedProgramNamesByMostOccurrences: string[] = [
+    ...programNamesOccurrencesOfLeastPackedDatesMap,
+  ]
     .sort(
       (
         [programNameA, programOccurrenceA],
@@ -65,8 +85,13 @@ export function recommendProgramNamesAddressingGapInTime(): Result<string[]> {
         return programOccurrenceB - programOccurrenceA // sort by highest number of occurrences
       }
     )
-    .slice(0, 3)
     .map(([programName, programOccurrence]) => programName)
 
-  return buildSuccessResultDTO(recommendedProgramNamesOnLeastPackedDates)
+  // get up to 3 most popular program names on least packed dates
+  const topProgramNames: string[] = sortedProgramNamesByMostOccurrences.slice(
+    0,
+    3
+  )
+
+  return buildSuccessResultDTO(topProgramNames)
 }

@@ -6,8 +6,8 @@ import {
 } from "../../shared/utils"
 import { buildErrorResultDTO, buildSuccessResultDTO } from "../../shared/utils"
 
-// @TODO: make this configurable
-const ISOLATION_PERIOD_IN_DAYS = 15
+// @TODO: make the picked number of isolation days configurable
+const NUMBER_OF_ISOLATION_DAYS = 15
 
 export function recommendProgramNamesEngagingIsolatedResidents(): Result<
   string[]
@@ -62,7 +62,7 @@ export function recommendProgramNamesEngagingIsolatedResidents(): Result<
       // check if the gap between the 2 dates is greater or equal to ISOLATION_PERIOD_IN_DAYS
       if (
         countDaysBetweenISODateTimesUTC(prevDate, nextDate) >=
-        ISOLATION_PERIOD_IN_DAYS
+        NUMBER_OF_ISOLATION_DAYS
       ) {
         // nextProgramName is a program that an isolated resident have attended, add it to the list
         programNamesAttendedByIsolatedResidents.push(nextProgramName)
@@ -78,19 +78,21 @@ export function recommendProgramNamesEngagingIsolatedResidents(): Result<
   }
 
   // sort programs names by most occurred,
-  const sortedProgramNamesByMostOccurred = [...programNamesOccurrencesMap].sort(
-    (
-      [programNameA, programOccurrenceA],
-      [programNameB, programOccurrenceB]
-    ) => {
-      return programOccurrenceB - programOccurrenceA
-    }
-  )
+  const sortedProgramNamesByMostOccurred: string[] = [
+    ...programNamesOccurrencesMap,
+  ]
+    .sort(
+      (
+        [programNameA, programOccurrenceA],
+        [programNameB, programOccurrenceB]
+      ) => {
+        return programOccurrenceB - programOccurrenceA
+      }
+    )
+    .map(([programName, programOccurrence]) => programName)
 
   // get up to 3 most popular program names engaging isolated residents
-  const topProgramNames = sortedProgramNamesByMostOccurred
-    .slice(0, 3)
-    .map(([programName]) => programName)
+  const topProgramNames: string[] = sortedProgramNamesByMostOccurred.slice(0, 3)
 
   return buildSuccessResultDTO(topProgramNames)
 }

@@ -9,7 +9,7 @@ import {
 } from "../../shared/utils"
 import { buildErrorResultDTO, buildSuccessResultDTO } from "../../shared/utils"
 
-// @TODO: make the number of picked hobby names configurable
+// @TODO: make the picked number of hobbies configurable
 const NUMBER_OF_TOP_HOBBIES = 5
 
 export function recommendProgramNamesAddressingGapInOfferings(): Result<
@@ -53,7 +53,7 @@ export function recommendProgramNamesAddressingGapInOfferings(): Result<
     }
   }
 
-  // Take up to the first 5 most popular hobby names
+  // Take up to the first 5 most popular hobbies
   const mostPopularHobbies: string[] = [...allResidentHobbiesCountMap]
     .filter(([hobby, hobbyCount]) => hobby !== "NO_HOBBIES") // remove noise
     .sort(
