@@ -1,13 +1,12 @@
 import { ProgramRepository } from "../../database/repositories/program.repository"
 import {
-  Result,
   countDaysBetweenISODateTimesUTC,
   getUpToFirst3ProgramNames,
   setOrIncrementMapValueByKey,
   buildErrorResultDTO,
   buildSuccessResultDTO,
 } from "../../shared/utils"
-
+import { Result } from "../../shared/types"
 // @TODO: make the picked number of isolation days configurable
 const NUMBER_OF_ISOLATION_DAYS = 15
 

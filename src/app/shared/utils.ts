@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { Program } from "../database/models/Program"
+import { ErrorResult, SuccessResult } from "./types"
 
 export function explodeStringOnCommas(str: string | null): string[] {
   if (!str || str === null) return []
@@ -80,18 +80,6 @@ export const countDaysBetweenISODateTimesUTC = (
 }
 
 // @TODO: find a better place to store these functions and types
-type SuccessResult<T> = {
-  data: T
-  error: null
-}
-
-type ErrorResult = {
-  data: null
-  error: {
-    message: string
-    httpStatusCode: number
-  }
-}
 
 export function buildSuccessResultDTO<T>(data: T): SuccessResult<T> {
   return {
@@ -112,8 +100,6 @@ export function buildErrorResultDTO(
     },
   }
 }
-
-export type Result<T> = SuccessResult<T> | ErrorResult
 
 export function buildNextSuccessResponse<T>(data: T) {
   return NextResponse.json(buildSuccessResultDTO(data), { status: 200 })

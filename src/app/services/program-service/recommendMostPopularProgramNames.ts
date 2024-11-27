@@ -3,9 +3,9 @@ import { ProgramRepository } from "../../database/repositories/program.repositor
 import {
   buildErrorResultDTO,
   buildSuccessResultDTO,
-  Result,
   getUpToFirst3ProgramNames,
 } from "../../shared/utils"
+import { Result } from "../../shared/types"
 
 export function recommendMostPopularProgramNames(): Result<string[]> {
   const allPrograms: Program[] = ProgramRepository.getAllPrograms()

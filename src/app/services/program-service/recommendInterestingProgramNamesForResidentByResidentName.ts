@@ -6,10 +6,10 @@ import {
   buildErrorResultDTO,
   buildSuccessResultDTO,
   getUpToFirst3ProgramNames,
-  Result,
 } from "../../shared/utils"
 import { Resident } from "../../database/models/Resident"
 import { Program } from "../../database/models/Program"
+import { Result } from "../../shared/types"
 
 export function recommendInterestingProgramNamesForResidentByResidentName(
   residentName: string

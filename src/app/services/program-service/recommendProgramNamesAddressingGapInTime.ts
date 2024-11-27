@@ -1,13 +1,13 @@
 import { Program } from "../../database/models/Program"
 import { ProgramRepository } from "../../database/repositories/program.repository"
 import {
-  Result,
   extractDateStringFromISODateTimeUTC,
   getUpToFirst3ProgramNames,
   setOrIncrementMapValueByKey,
   buildErrorResultDTO,
   buildSuccessResultDTO,
 } from "../../shared/utils"
+import { Result } from "../../shared/types"
 
 // @TODO: make the picked number of least packed dates configurable
 const NUMBER_OF_LEAST_PACKED_DAYS = 5

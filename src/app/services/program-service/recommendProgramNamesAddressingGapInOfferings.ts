@@ -3,13 +3,13 @@ import { Resident } from "../../database/models/Resident"
 import { ProgramRepository } from "../../database/repositories/program.repository"
 import { ResidentRepository } from "../../database/repositories/resident.repository"
 import {
-  Result,
   explodeStringOnCommas,
   getUpToFirst3ProgramNames,
   setOrIncrementMapValueByKey,
   buildErrorResultDTO,
   buildSuccessResultDTO,
 } from "../../shared/utils"
+import { Result } from "../../shared/types"
 
 // @TODO: make the picked number of hobbies configurable
 const NUMBER_OF_TOP_HOBBIES = 5
