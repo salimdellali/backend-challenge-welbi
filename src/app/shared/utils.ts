@@ -25,11 +25,8 @@ export function countSimilarValues(
   return count
 }
 
-export function getUpToFirst3ProgramNames(programs: Program[]): string[] {
-  const upToFirst3Programs = programs.slice(0, 3)
-
-  // return program names
-  return upToFirst3Programs.map((program) => program.name)
+export function getUpToFirst3ProgramNames(programNames: string[]): string[] {
+  return programNames.slice(0, 3)
 }
 
 export function setOrIncrementMapValueByKey(

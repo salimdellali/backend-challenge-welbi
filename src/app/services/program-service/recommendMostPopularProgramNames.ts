@@ -19,16 +19,20 @@ export function recommendMostPopularProgramNames(): Result<string[]> {
 
   // sort programs by number of attendees
   // programs will be sorted from most to least popular
-  const sortedProgramsByNbAttendees: Program[] = allPrograms.sort((a, b) => {
-    return b.attendees.length - a.attendees.length
-  })
+  const sortedProgramsByNbAttendees: Program[] = allPrograms.sort(
+    (programA, programB) => {
+      return programB.attendees.length - programA.attendees.length // sort by most number of attendees
+    }
+  )
 
-  // filter duplicate programs by name
-  const uniquePrograms: Program[] =
+  // filter duplicate program names by name
+  const uniqueProgramNames: string[] =
     ProgramRepository.filterDuplicateProgramsByProgramName(
       sortedProgramsByNbAttendees
-    )
-  const topProgramNames: string[] = getUpToFirst3ProgramNames(uniquePrograms)
+    ).map((program) => program.name)
+
+  const topProgramNames: string[] =
+    getUpToFirst3ProgramNames(uniqueProgramNames)
 
   return buildSuccessResultDTO(topProgramNames)
 }

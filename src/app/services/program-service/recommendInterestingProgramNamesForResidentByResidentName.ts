@@ -66,28 +66,29 @@ export function recommendInterestingProgramNamesForResidentByResidentName(
   }
   // programs with resident hobbies found
 
-  // order programs with hobbies that are most similar to resident hobbies
+  // sort programs with hobbies that are most similar to resident hobbies
   // programs will be sorted from most similar to least similar
   const sortedProgramsByMostSimilarResidentHobbies: Program[] =
     programsWithResidentHobbies.sort((programA, programB) => {
-      const aSimilarityScore = countSimilarValues(
+      const hobbiesSimilarityScoreA = countSimilarValues(
         explodeStringOnCommas(programA.hobbies!),
         residentHobbiesArray
       )
-      const bSimilarityScore = countSimilarValues(
+      const hobbiesSimilarityScoreB = countSimilarValues(
         explodeStringOnCommas(programB.hobbies!),
         residentHobbiesArray
       )
-      return bSimilarityScore - aSimilarityScore
+      return hobbiesSimilarityScoreB - hobbiesSimilarityScoreA // sort by most similar hobbies
     })
 
-  // filter duplicate programs by name
-  const uniquePrograms: Program[] =
+  // filter duplicate program names by name
+  const uniqueProgramNames: string[] =
     ProgramRepository.filterDuplicateProgramsByProgramName(
       sortedProgramsByMostSimilarResidentHobbies
-    )
+    ).map((program) => program.name)
 
-  const topProgramNames: string[] = getUpToFirst3ProgramNames(uniquePrograms)
+  const topProgramNames: string[] =
+    getUpToFirst3ProgramNames(uniqueProgramNames)
 
   // @TODO: refine more the recommendation by randomizing
   // programs with same similarity scores

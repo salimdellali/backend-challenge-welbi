@@ -3,6 +3,7 @@ import { ProgramRepository } from "../../database/repositories/program.repositor
 import {
   Result,
   extractDateStringFromISODateTimeUTC,
+  getUpToFirst3ProgramNames,
   setOrIncrementMapValueByKey,
 } from "../../shared/utils"
 import { buildErrorResultDTO, buildSuccessResultDTO } from "../../shared/utils"
@@ -88,9 +89,8 @@ export function recommendProgramNamesAddressingGapInTime(): Result<string[]> {
     .map(([programName, programOccurrence]) => programName)
 
   // get up to 3 most popular program names on least packed dates
-  const topProgramNames: string[] = sortedProgramNamesByMostOccurrences.slice(
-    0,
-    3
+  const topProgramNames: string[] = getUpToFirst3ProgramNames(
+    sortedProgramNamesByMostOccurrences
   )
 
   return buildSuccessResultDTO(topProgramNames)

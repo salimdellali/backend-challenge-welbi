@@ -5,6 +5,7 @@ import { ResidentRepository } from "../../database/repositories/resident.reposit
 import {
   Result,
   explodeStringOnCommas,
+  getUpToFirst3ProgramNames,
   setOrIncrementMapValueByKey,
 } from "../../shared/utils"
 import { buildErrorResultDTO, buildSuccessResultDTO } from "../../shared/utils"
@@ -95,9 +96,8 @@ export function recommendProgramNamesAddressingGapInOfferings(): Result<
     .map(([programName, programCount]) => programName)
 
   // recommend 3 least occurred programs
-  const topProgramNames: string[] = sortedProgramNamesByLeastOccurred.slice(
-    0,
-    3
+  const topProgramNames: string[] = getUpToFirst3ProgramNames(
+    sortedProgramNamesByLeastOccurred
   )
 
   return buildSuccessResultDTO(topProgramNames)

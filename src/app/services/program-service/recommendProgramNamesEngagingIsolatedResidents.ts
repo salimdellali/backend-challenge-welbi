@@ -2,6 +2,7 @@ import { ProgramRepository } from "../../database/repositories/program.repositor
 import {
   Result,
   countDaysBetweenISODateTimesUTC,
+  getUpToFirst3ProgramNames,
   setOrIncrementMapValueByKey,
 } from "../../shared/utils"
 import { buildErrorResultDTO, buildSuccessResultDTO } from "../../shared/utils"
@@ -92,7 +93,9 @@ export function recommendProgramNamesEngagingIsolatedResidents(): Result<
     .map(([programName, programOccurrence]) => programName)
 
   // get up to 3 most popular program names engaging isolated residents
-  const topProgramNames: string[] = sortedProgramNamesByMostOccurred.slice(0, 3)
+  const topProgramNames: string[] = getUpToFirst3ProgramNames(
+    sortedProgramNamesByMostOccurred
+  )
 
   return buildSuccessResultDTO(topProgramNames)
 }
