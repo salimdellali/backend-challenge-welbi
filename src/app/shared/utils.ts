@@ -76,7 +76,7 @@ export const countDaysBetweenISODateTimesUTC = (
   const diffInDays = diffInMilliseconds / (1000 * 60 * 60 * 24)
 
   // Return the number of days (rounded to the nearest integer)
-  return Math.round(diffInDays)
+  return Math.floor(diffInDays)
 }
 
 // @TODO: find a better place to store these functions and types

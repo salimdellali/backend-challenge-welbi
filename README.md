@@ -17,3 +17,4 @@
 1. implement feature 2 "Engages multiple isolated residents"
 1. refactor code
 1. prepare simple home page with links to test the REST API endpoints in the browser
+1. add unit tests, add test and test:verbose scripts, add author to package.json, add TODO unit and integration tests, fix a bug in countDaysBetweenISODateTimesUTC(), edit home page metadata
