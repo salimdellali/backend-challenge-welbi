@@ -5,8 +5,9 @@ import {
   extractDateStringFromISODateTimeUTC,
   getUpToFirst3ProgramNames,
   setOrIncrementMapValueByKey,
+  buildErrorResultDTO,
+  buildSuccessResultDTO,
 } from "../../shared/utils"
-import { buildErrorResultDTO, buildSuccessResultDTO } from "../../shared/utils"
 
 // @TODO: make the picked number of least packed dates configurable
 const NUMBER_OF_LEAST_PACKED_DAYS = 5
@@ -47,7 +48,7 @@ export function recommendProgramNamesAddressingGapInTime(): Result<string[]> {
   const sortedProgramNamesByNbProgramsPerDate: [
     string, // date
     string[] // array of program names that happened on that date
-  ][] = [...groupedProgramNamesByStartDateMap].sort(
+  ][] = [...groupedProgramNamesByStartDateMap].toSorted(
     ([dateA, programNamesA], [dateB, programsNamesB]) => {
       return programNamesA.length - programsNamesB.length // sort by lowest number of occurred programs per date
     }
@@ -78,7 +79,7 @@ export function recommendProgramNamesAddressingGapInTime(): Result<string[]> {
   const sortedProgramNamesByMostOccurrences: string[] = [
     ...programNamesOccurrencesOfLeastPackedDatesMap,
   ]
-    .sort(
+    .toSorted(
       (
         [programNameA, programOccurrenceA],
         [programNameB, programOccurrenceB]

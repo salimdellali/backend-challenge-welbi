@@ -4,8 +4,9 @@ import {
   countDaysBetweenISODateTimesUTC,
   getUpToFirst3ProgramNames,
   setOrIncrementMapValueByKey,
+  buildErrorResultDTO,
+  buildSuccessResultDTO,
 } from "../../shared/utils"
-import { buildErrorResultDTO, buildSuccessResultDTO } from "../../shared/utils"
 
 // @TODO: make the picked number of isolation days configurable
 const NUMBER_OF_ISOLATION_DAYS = 15
@@ -82,7 +83,7 @@ export function recommendProgramNamesEngagingIsolatedResidents(): Result<
   const sortedProgramNamesByMostOccurred: string[] = [
     ...programNamesOccurrencesMap,
   ]
-    .sort(
+    .toSorted(
       (
         [programNameA, programOccurrenceA],
         [programNameB, programOccurrenceB]

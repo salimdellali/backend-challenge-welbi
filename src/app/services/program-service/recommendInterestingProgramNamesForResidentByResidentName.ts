@@ -69,13 +69,13 @@ export function recommendInterestingProgramNamesForResidentByResidentName(
   // sort programs with hobbies that are most similar to resident hobbies
   // programs will be sorted from most similar to least similar
   const sortedProgramsByMostSimilarResidentHobbies: Program[] =
-    programsWithResidentHobbies.sort((programA, programB) => {
+    programsWithResidentHobbies.toSorted((programA, programB) => {
       const hobbiesSimilarityScoreA = countSimilarValues(
-        explodeStringOnCommas(programA.hobbies!),
+        explodeStringOnCommas(programA.hobbies),
         residentHobbiesArray
       )
       const hobbiesSimilarityScoreB = countSimilarValues(
-        explodeStringOnCommas(programB.hobbies!),
+        explodeStringOnCommas(programB.hobbies),
         residentHobbiesArray
       )
       return hobbiesSimilarityScoreB - hobbiesSimilarityScoreA // sort by most similar hobbies

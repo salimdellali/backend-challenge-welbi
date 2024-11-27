@@ -19,7 +19,7 @@ export function recommendMostPopularProgramNames(): Result<string[]> {
 
   // sort programs by number of attendees
   // programs will be sorted from most to least popular
-  const sortedProgramsByNbAttendees: Program[] = allPrograms.sort(
+  const sortedProgramsByNbAttendees: Program[] = allPrograms.toSorted(
     (programA, programB) => {
       return programB.attendees.length - programA.attendees.length // sort by most number of attendees
     }

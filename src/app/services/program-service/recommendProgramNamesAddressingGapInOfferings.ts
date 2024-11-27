@@ -7,8 +7,9 @@ import {
   explodeStringOnCommas,
   getUpToFirst3ProgramNames,
   setOrIncrementMapValueByKey,
+  buildErrorResultDTO,
+  buildSuccessResultDTO,
 } from "../../shared/utils"
-import { buildErrorResultDTO, buildSuccessResultDTO } from "../../shared/utils"
 
 // @TODO: make the picked number of hobbies configurable
 const NUMBER_OF_TOP_HOBBIES = 5
@@ -57,7 +58,7 @@ export function recommendProgramNamesAddressingGapInOfferings(): Result<
   // Take up to the first 5 most popular hobbies
   const mostPopularHobbies: string[] = [...allResidentHobbiesCountMap]
     .filter(([hobby, hobbyCount]) => hobby !== "NO_HOBBIES") // remove noise
-    .sort(
+    .toSorted(
       ([hobbyA, hobbyCountA], [hobbyB, hobbyCountB]) =>
         hobbyCountB - hobbyCountA // sort by most popular hobby
     )
@@ -89,7 +90,7 @@ export function recommendProgramNamesAddressingGapInOfferings(): Result<
   const sortedProgramNamesByLeastOccurred: string[] = [
     ...programNamesCountWithMostPopularHobbiesMap,
   ]
-    .sort(
+    .toSorted(
       ([programNameA, programCountA], [programNameB, programCountB]) =>
         programCountA - programCountB // sort by least occurred program with most popular hobbies
     )
