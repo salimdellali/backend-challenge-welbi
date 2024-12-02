@@ -65,10 +65,15 @@ you can even try GET requests from the live demo
 
 ## Lessons learned
 
-- sort() mutates the array it is applied to, had to replace it with toSorted()
-- literally applied the concept of **"make it work, make it right, make it fast"**. So I made it work first, then made it right (refactoring). Did not make it fast (yet)
+- `sort()` mutates the array it is applied to, had to replace it with `toSorted()`
+- replace the usage of `forEach` with `for` loop because:
+  - for larger datasets and performance-critical code, `for` is slightly faster than `forEach`
+  - `for` supports `break` and `continue` but `forEach` technically does not
+  - `for` gives index control if needed that `forEach` does not
+  - because `forEach` is a callback, it introduces a new set of brackets which can make the code slightly harder to read
 
 ## Final notes
 
+- my way of doing is based on the following saying **"make it work, make it right, make it fast"**. So I made it work first, then made it right (refactoring). Did not make it fast (yet)
 - I liked so much solving these types of "puzzle" challenges
 - built with love and excitement by Salim Dellali =)
